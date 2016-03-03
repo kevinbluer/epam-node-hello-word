@@ -13,6 +13,8 @@ var app = express();
 
 var api = require('./routes/api');
 
+var _ = require('underscore');
+
 // setup handlebars
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -24,14 +26,38 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // setup our public directory (which will serve any file stored in the 'public' directory)
 app.use(express.static('public'));
 
+app.use(function (req, res, next) {
+  res.locals.scripts = [];
+  next();
+});
+
 // respond to the get request with the home page
 app.get('/', function (req, res) {
+    res.locals.scripts.push('/js/home.js');
     res.render('home');
 });
 
 // respond to the get request with the about page
 app.get('/about', function(req, res) {
+  res.locals.scripts.push('/js/about.js');
   res.render('about');
+});
+
+app.get('/article/:id', function(req, res) {
+
+  var fs = require('fs');
+  var obj;
+  fs.readFile('./data/articles.json', 'utf8', function (err, data) {
+    if (err) throw err;
+
+
+    data = _.filter(JSON.parse(data), function(item) {
+        return item.id == req.params.id;
+    });
+
+    res.render('article', data[0]);
+  });
+
 });
 
 // respond to the get request with the register page
