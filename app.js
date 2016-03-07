@@ -1,6 +1,23 @@
 // include and setup express
 var express = require('express');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost/epam-api');
+var Schema = mongoose.Schema;
+
+// Create a Schema for Articles
+var ArticleSchema = new Schema({
+  title: String,
+  url: String,
+  image: String,
+  username: String,
+  date: Date
+});
+
+mongoose.model('Article', ArticleSchema);
+var Article = mongoose.model('Article');
 
 // include express handlebars (templating engine)
 var exphbs  = require('express-handlebars');
@@ -19,7 +36,7 @@ var _ = require('underscore');
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-// express middleware that parser the key-value pairs sent in the request body in the format of our choosing (e.g. json) 
+// express middleware that parser the key-value pairs sent in the request body in the format of our choosing (e.g. json)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -68,7 +85,7 @@ app.get('/register', function(req, res) {
 // handle the posted registration data
 app.post('/register', function(req, res) {
 
-  // get the data out of the request (req) object 
+  // get the data out of the request (req) object
   // store the user in memory here
 
   res.redirect('/dashboard');
