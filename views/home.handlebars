@@ -4,21 +4,15 @@
   <p><a class="btn btn-primary btn-lg" href="/about" role="button">Learn more</a></p>
 </div>
 <div class="row">
-	<div class="col-md-4">
-		<p class="text-center img">
-			Insert Article + Responsive Image Here
-		</p>
-	</div>
-	<div class="col-md-4">
-		<p class="text-center img">
-			Insert Article + Responsive Image Here
-		</p>
-	</div>
-	<div class="col-md-4">
-		<p class="text-center img">
-			Insert Article + Responsive Image Here
-		</p>
-	</div>
+	<script id="entry-template" type="text/x-handlebars-template">
+	\{{#each articles}}
+		<div class="col-md-4">
+			<p class="text-center img">
+				\{{ title }}
+			</p>
+		</div>
+	\{{/each}}
+	</script>
 </div>
 <div class="panel panel-default">
   <div class="panel-heading">
