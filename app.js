@@ -5,19 +5,10 @@ var mongoose = require('mongoose');
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost/epam-api');
-var Schema = mongoose.Schema;
 
-// Create a Schema for Articles
-var ArticleSchema = new Schema({
-  title: String,
-  url: String,
-  image: String,
-  username: String,
-  date: Date
-});
-
-mongoose.model('Article', ArticleSchema);
-var Article = mongoose.model('Article');
+// register the schemas for our models
+require('./models/article.js');
+require('./models/user.js');
 
 // include express handlebars (templating engine)
 var exphbs  = require('express-handlebars');
@@ -79,6 +70,7 @@ app.get('/article/:id', function(req, res) {
 
 // respond to the get request with the register page
 app.get('/register', function(req, res) {
+
   res.render('register');
 });
 

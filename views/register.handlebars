@@ -1,6 +1,6 @@
 <h2>Register</h2>
-<p>Register for The The Next below...</p>
-<form action="/register" method="post">
+<p>Register for The Next XYZ below. If you already have an account you can <a href="/login"><strong>sign-in here</strong></a>.</p>
+<form action="/api/register" method="post">
   <div class="form-group">
     <label for="exampleInputEmail1">Name</label>
     <input name="name" type="name" class="form-control" id="exampleInputName1" placeholder="Full Name">
@@ -12,11 +12,6 @@
   <div class="form-group">
     <label for="exampleInputPassword1">Password</label>
     <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-  </div>
-  <div class="checkbox">
-    <label>
-      <input type="checkbox"> Check me out
-    </label>
   </div>
   <button type="submit" class="btn btn-inverse btn-lg">Register</button>
 </form>

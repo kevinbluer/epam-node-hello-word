@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var _ = require('underscore');
 
 var Article = mongoose.model('Article');
+var User = mongoose.model('User');
 
 // note that typically data would NOT be loaded from the filesystem in this manner :)
 
@@ -27,6 +28,20 @@ router.get('/articles/:id', function(req, res, next) {
 			res.send(404, 'File not Found.');
 		}
 	});
+});
+
+router.post('/register', function(req, res, next) {
+
+	// IMPORTANT - WE SHOULD NEVER SAVE OUR PASSWORD IN CLEAR TEXT
+
+	var user = new User(req.body);
+	user.save(function(err, user) {
+		if (err) {
+			res.redirect('/register?status=fail');
+		}
+
+		res.redirect('/login');
+	});	
 });
 
 module.exports = router;
