@@ -2,6 +2,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
+var session = require('express-session');
+var LocalStrategy = require('passport-local').Strategy;
+var _ = require('underscore');
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost/epam-api');
@@ -9,6 +13,8 @@ mongoose.connect('mongodb://localhost/epam-api');
 // register the schemas for our models
 require('./models/article.js');
 require('./models/user.js');
+
+var User = mongoose.model('User');
 
 // include express handlebars (templating engine)
 var exphbs  = require('express-handlebars');
@@ -21,7 +27,28 @@ var app = express();
 
 var api = require('./routes/api');
 
-var _ = require('underscore');
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ email: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 // setup handlebars
 app.engine('handlebars', hbs.engine);
@@ -30,6 +57,12 @@ app.set('view engine', 'handlebars');
 // express middleware that parser the key-value pairs sent in the request body in the format of our choosing (e.g. json)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(session({ secret: 'anything' }));
+
+// setup passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // setup our public directory (which will serve any file stored in the 'public' directory)
 app.use(express.static('public'));
@@ -44,6 +77,17 @@ app.get('/', function (req, res) {
     res.locals.scripts.push('/js/home.js');
     res.render('home');
 });
+
+app.get('/login', function(req, res) {
+  res.render('login');
+})
+
+app.post('/login',
+  passport.authenticate('local', { 
+    successRedirect: '/dashboard',
+    failureRedirect: '/login' 
+  })
+);
 
 // respond to the get request with the about page
 app.get('/about', function(req, res) {
@@ -85,11 +129,13 @@ app.post('/register', function(req, res) {
 
 // respond to the get request with dashboard page (and pass in some data into the template / note this will be rendered server-side)
 app.get('/dashboard', function (req, res) {
+    console.log(req.user);
     res.render('dashboard', {
     	stuff: [{
 		    greeting: "Hello",
 		    subject: "World!"
-		}]
+		}],
+    user: req.user
     });
 });
 
