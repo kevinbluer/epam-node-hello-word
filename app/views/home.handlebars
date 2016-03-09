@@ -6,11 +6,13 @@
 <div class="row">
 	<script id="entry-template" type="text/x-handlebars-template">
 	\{{#each articles}}
-		<div class="col-md-4">
-			<p class="text-center img">
-				\{{ title }}
-			</p>
-		</div>
+		<a href="/article/\{{ _id }}">
+      <div class="col-md-4">
+  			<p class="text-center img">
+  				\{{ title }}
+  			</p>
+  		</div>
+    </a>
 	\{{/each}}
 	</script>
 </div>
