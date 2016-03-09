@@ -41,6 +41,10 @@ module.exports = function(db) {
 	app.use(function (req, res, next) {
 	  res.locals.scripts = [];
 	  next();
+
+	  if (req.user) {
+	  	res.locals.user = req.user;
+	  }
 	});
 
 	// loading the routes
