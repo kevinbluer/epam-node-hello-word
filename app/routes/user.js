@@ -14,5 +14,4 @@ module.exports = function(app) {
 	    failureRedirect: '/login' 
 	  }));
 	app.get('/register', user.getRegister);
-	app.post('/login', user.register);
 }

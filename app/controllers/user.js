@@ -1,6 +1,7 @@
 'use strict';
 
 var passport = require('passport');
+var User = require('mongoose').model('User');
 
 exports.getLogin = function(req, res) {
 
@@ -10,11 +11,6 @@ exports.getLogin = function(req, res) {
 exports.getRegister = function(req, res) {
 
 	res.render('register');
-}
-
-exports.register = function(req, res) {
-
-	  res.redirect('/dashboard');
 }
 
 exports.isAuthenticated = function(req, res, next) {

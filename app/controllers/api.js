@@ -44,9 +44,11 @@ exports.register = function(req, res) {
 	var user = new User(req.body);
 	user.save(function(err, user) {
 		if (err) {
+			console.log(err);
 			res.redirect('/register?status=fail');
 		}
 
+		console.log('user created');
 		res.redirect('/login');
 	});
 }
